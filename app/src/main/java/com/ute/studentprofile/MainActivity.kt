@@ -1,7 +1,9 @@
 package com.ute.studentprofile
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.ute.studentprofile.databinding.ActivityMainBinding
@@ -9,6 +11,7 @@ import com.ute.studentprofile.model.Student
 import com.ute.studentprofile.utils.gone
 import com.ute.studentprofile.utils.show
 import com.ute.studentprofile.utils.toAcademicRanking
+import com.ute.studentprofile.utils.toRankingColor
 import com.ute.studentprofile.utils.toast
 import com.ute.studentprofile.utils.trimmedText
 
@@ -68,6 +71,10 @@ class MainActivity : AppCompatActivity() {
             tvStudentDetails.text = "MSSV: ${student.id}  •  Lớp: ${student.className}"
             tvStudentEmail.text = "Email: ${student.email}"
             tvGpaBadge.text = "${student.gpa} GPA  •  ${student.gpa.toAcademicRanking()}"
+
+            // TỰ MỞ RỘNG 1: Đổi màu chữ của Badge động theo ngưỡng xếp loại
+            tvGpaBadge.setTextColor(student.gpa.toRankingColor())
+
             edtGpaInput.setText(student.gpa.toString())
 
             // Hiển thị huy hiệu vinh danh dựa trên Computed Property
@@ -87,13 +94,12 @@ class MainActivity : AppCompatActivity() {
         binding.edtGpaInput.doOnTextChanged { text, _, _, _ ->
             val input = text?.toString()?.trim().orEmpty()
             if (input.isNotEmpty()) {
-                // Tự động xóa cảnh báo lỗi cũ
                 binding.edtGpaInput.error = null
 
-                // Xem trước xếp loại học lực tương ứng
                 val tempScore = input.toDoubleOrNull()
                 if (tempScore != null && tempScore in 0.0..4.0) {
                     binding.tvPreviewRanking.text = "Dự kiến: ${tempScore.toAcademicRanking()}"
+                    binding.tvPreviewRanking.setTextColor(tempScore.toRankingColor())
                     binding.tvPreviewRanking.show()
                 } else {
                     binding.tvPreviewRanking.gone()
@@ -124,14 +130,56 @@ class MainActivity : AppCompatActivity() {
             toast("Đã cập nhật GPA thành công!")
         }
 
-        // Nút phụ: Khôi phục dữ liệu mặc định (Reset)
+        // TỰ MỞ RỘNG 2: Nút Khôi phục kèm Dialog Xác nhận (AlertDialog)
         binding.btnReset.setOnClickListener {
-            currentStudent = defaultStudent
-            bindStudentData(currentStudent)
-            binding.edtGpaInput.error = null
-            binding.tvPreviewRanking.gone()
+            AlertDialog.Builder(this).apply {
+                setTitle("Xác nhận khôi phục")
+                setMessage("Bạn có chắc chắn muốn đặt lại điểm GPA ban đầu (${defaultStudent.gpa}) không?")
+                setNegativeButton("Hủy") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                setPositiveButton("Đồng ý") { _, _ ->
+                    currentStudent = defaultStudent
+                    bindStudentData(currentStudent)
+                    binding.edtGpaInput.error = null
+                    binding.tvPreviewRanking.gone()
+                    toast("Đã khôi phục dữ liệu mặc định!")
+                }
+            }.show()
+        }
 
-            toast("Đã khôi phục dữ liệu mặc định!")
+        // TỰ MỞ RỘNG 3: Nút Gửi Email Báo cáo Kết quả (Implicit Intent)
+        binding.btnSendReport.setOnClickListener {
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:${currentStudent.email}")
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    "[Báo cáo học tập] Sinh viên ${currentStudent.name} - MSSV ${currentStudent.id}"
+                )
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    """
+                    Kính gửi Phòng Đào Tạo và Cố Vấn Học Tập,
+
+                    Dưới đây là thông tin báo cáo kết quả học tập của sinh viên:
+                    • Họ và tên: ${currentStudent.name}
+                    • Mã số sinh viên (MSSV): ${currentStudent.id}
+                    • Lớp sinh hoạt: ${currentStudent.className}
+                    • Điểm trung bình tích lũy (GPA): ${currentStudent.gpa} / 4.0
+                    • Xếp loại học lực: ${currentStudent.gpa.toAcademicRanking()}
+                    • Danh hiệu vinh danh: ${if (currentStudent.isHonorStudent) "Sinh viên Vinh danh ⭐" else "Bình thường"}
+
+                    Trân trọng,
+                    ${currentStudent.name}
+                    """.trimIndent()
+                )
+            }
+
+            try {
+                startActivity(emailIntent)
+            } catch (e: Exception) {
+                toast("Không tìm thấy ứng dụng gửi Email trên thiết bị!")
+            }
         }
     }
 
