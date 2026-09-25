@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     // BÀI 5: Đối tượng sinh viên hiện tại (Data Class bất biến)
     private var currentStudent = Student(
-        id = "22505120005",
-        name = "Nguyễn Văn An",
-        className = "22CT111",
-        email = "an.nv@ute.udn.vn",
+        id = "24155053122202",
+        name = "Huỳnh Ngọc Anh",
+        className = "24T2",
+        email = "anhsieu572@gmail.com",
         gpa = 3.75
     )
 
