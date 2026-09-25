@@ -20,13 +20,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:gravity="center"
+            android:letterSpacing="0.08"
             android:text="STUDENT PROFILE &amp; ACADEMIC MANAGER"
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
-            android:letterSpacing="0.08"
             android:textStyle="bold" />
 
-        <!-- res/layout/activity_main.xml (Phần 1: Thẻ Hồ sơ Sinh viên) -->
+        <!-- Phần 1: Thẻ Hồ sơ Sinh viên -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
-                <!-- Huy hiệu GPA & Xếp loại -->
+                <!-- Huy hiệu GPA & Xếp loại (Tự mở rộng 1: Đổi màu chữ động) -->
                 <TextView
                     android:id="@+id/tvGpaBadge"
                     android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- res/layout/activity_main.xml (Phần 2: Form Thao tác) -->
+        <!-- Phần 2: Form Thao tác & Các Nút Hành Động -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
-                <!-- Nút phụ: Khôi Phục Mặc Định -->
+                <!-- Nút phụ: Khôi Phục Mặc Định (Tự mở rộng 2: Kèm Dialog xác nhận) -->
                 <Button
                     android:id="@+id/btnReset"
                     android:layout_width="match_parent"
@@ -179,6 +179,18 @@
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/btn_reset"
                     android:text="Khôi Phục Mặc Định"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp" />
+
+                <!-- Nút mở rộng 3: Gửi Báo Cáo Học Tập (Implicit Intent) -->
+                <Button
+                    android:id="@+id/btnSendReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/btn_cyan"
+                    android:text="Gửi Báo Cáo Học Tập"
                     android:textAllCaps="false"
                     android:textColor="@color/text_white"
                     android:textSize="14sp" />
