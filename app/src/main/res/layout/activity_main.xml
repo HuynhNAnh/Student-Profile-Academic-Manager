@@ -41,7 +41,7 @@
             android:textColor="#666666"
             android:textSize="14sp" />
 
-        <!-- 2. Thông tin sinh viên (dành cho hàm displayStudent) -->
+        <!-- 2. Thẻ thông tin sinh viên (Bài 5: bindStudentData) -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,56 +57,83 @@
 
                 <!-- Tên sinh viên -->
                 <TextView
-                    android:id="@+id/tvName"
+                    android:id="@+id/tvStudentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Họ và tên sinh viên"
-                    android:textSize="18sp"
+                    android:text="Nguyễn Văn An"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <!-- Chi tiết MSSV & Lớp -->
+                <TextView
+                    android:id="@+id/tvStudentDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="MSSV: 22505120005  •  Lớp: 22CT111"
+                    android:textColor="#555555"
+                    android:textSize="14sp" />
 
                 <!-- Email sinh viên -->
                 <TextView
-                    android:id="@+id/tvEmail"
+                    android:id="@+id/tvStudentEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="student@email.com"
+                    android:layout_marginTop="6dp"
+                    android:text="Email: an.nv@ute.udn.vn"
+                    android:textColor="#555555"
                     android:textSize="14sp" />
 
-                <!-- Điểm tích lũy -->
+                <!-- Huy hiệu GPA & Xếp loại -->
                 <TextView
-                    android:id="@+id/tvGpa"
+                    android:id="@+id/tvGpaBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#E8F5E9"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="3.75 GPA  •  Xuất sắc"
+                    android:textColor="#2E7D32"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Huy hiệu Vinh danh (Dành cho isHonorStudent) -->
+                <TextView
+                    android:id="@+id/tvHonorBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Điểm tích lũy: --"
-                    android:textSize="16sp"
-                    android:textStyle="italic" />
+                    android:text="⭐ Sinh viên tiêu biểu / Vinh danh"
+                    android:textColor="#F57C00"
+                    android:textSize="13sp"
+                    android:textStyle="italic"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Thanh ProgressBar tiến trình tải (dành cho hàm displayStudent) -->
+        <!-- Thanh ProgressBar -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
 
-        <!-- Nút Cập nhật thông tin ban đầu -->
+        <!-- Nút kích hoạt/cập nhật hồ sơ -->
         <Button
             android:id="@+id/btnUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:enabled="false"
-            android:text="Kích hoạt hồ sơ" />
+            android:text="Hồ sơ đã kích hoạt" />
 
-        <!-- 3. Khu vực Bài 4: Validate điểm GPA với setOnClickListener & doOnTextChanged -->
+        <!-- 3. Khu vực cập nhật & Validate điểm GPA (Bài 4 & 5) -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="3dp"
             app:contentPadding="16dp">
@@ -119,7 +146,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cập nhật điểm GPA"
+                    android:text="Cập nhật điểm GPA (Bài 4 &amp; 5)"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
