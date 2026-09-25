@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Bảng màu giao diện Dark Theme dự án trọng tâm -->
+    <color name="bg_dark">#1B2631</color>
+    <color name="card_dark">#243342</color>
+    <color name="btn_update">#34B469</color>
+    <color name="btn_reset">#4E5D6C</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="badge_gpa_bg">#1E3A2F</color>
+    <color name="badge_gpa_text">#4CAF50</color>
+    <color name="honor_gold">#FFD700</color>
 </resources>

@@ -4,63 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_dark"
     android:fillViewport="true"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
-        <!-- Tiêu đề màn hình -->
+        <!-- Tiêu đề ứng dụng -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="Hồ Sơ Sinh Viên"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <!-- 1. Ảnh đại diện & Trạng thái ảnh (dành cho hàm processAvatarUri) -->
-        <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:contentDescription="Avatar"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_default_avatar" />
-
-        <TextView
-            android:id="@+id/tvAvatarStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Chưa có ảnh đại diện"
-            android:textColor="#666666"
-            android:textSize="14sp" />
-
-        <!-- 2. Thẻ thông tin sinh viên (Bài 5: bindStudentData) -->
-        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="3dp"
-            app:contentPadding="16dp">
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="STUDENT PROFILE &amp; ACADEMIC MANAGER"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:letterSpacing="0.08"
+            android:textStyle="bold" />
+
+        <!-- res/layout/activity_main.xml (Phần 1: Thẻ Hồ sơ Sinh viên) -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/card_dark"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Ảnh đại diện -->
+                <ImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:contentDescription="Avatar"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_default_avatar" />
 
                 <!-- Tên sinh viên -->
                 <TextView
                     android:id="@+id/tvStudentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:layout_marginTop="12dp"
+                    android:text="Huỳnh Ngọc Anh"
+                    android:textColor="@color/text_white"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <!-- Chi tiết MSSV & Lớp -->
@@ -68,8 +66,9 @@
                     android:id="@+id/tvStudentDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textColor="#555555"
+                    android:layout_marginTop="4dp"
+                    android:text="MSSV: 2415053122202  •  Lớp: 24T2"
+                    android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
                 <!-- Email sinh viên -->
@@ -77,8 +76,9 @@
                     android:id="@+id/tvStudentEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textColor="#555555"
+                    android:layout_marginTop="4dp"
+                    android:text="Email: anhsieu572@gmail.com"
+                    android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
                 <!-- Huy hiệu GPA & Xếp loại -->
@@ -86,108 +86,105 @@
                     android:id="@+id/tvGpaBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#E8F5E9"
-                    android:paddingHorizontal="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/badge_gpa_bg"
+                    android:paddingHorizontal="14dp"
                     android:paddingVertical="6dp"
-                    android:textColor="#2E7D32"
-                    android:textSize="15sp"
+                    android:text="3.75 GPA  •  Xuất sắc"
+                    android:textColor="@color/badge_gpa_text"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <!-- Huy hiệu Vinh danh (Dành cho isHonorStudent) -->
+                <!-- Nhãn vinh danh sinh viên tiêu biểu -->
                 <TextView
                     android:id="@+id/tvHonorBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="⭐ Sinh viên tiêu biểu / Vinh danh"
-                    android:textColor="#F57C00"
+                    android:text="⭐ Sinh viên Vinh danh (Honor Student)"
+                    android:textColor="@color/honor_gold"
                     android:textSize="13sp"
                     android:textStyle="italic"
                     android:visibility="gone" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <!-- Thanh ProgressBar -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
+        <!-- res/layout/activity_main.xml (Phần 2: Form Thao tác) -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
-
-        <!-- Nút kích hoạt/cập nhật hồ sơ -->
-        <Button
-            android:id="@+id/btnUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Hồ sơ đã kích hoạt" />
-
-        <!-- 3. Khu vực cập nhật & Validate điểm GPA  -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="3dp"
-            app:contentPadding="16dp">
+            app:cardBackgroundColor="@color/card_dark"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cập nhật điểm GPA"
+                    android:textColor="@color/text_white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
+                <!-- Ô nhập điểm GPA -->
+                <EditText
+                    android:id="@+id/edtGpaInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="8dp"
-                    app:boxCornerRadiusBottomStart="8dp"
-                    app:boxCornerRadiusTopEnd="8dp"
-                    app:boxCornerRadiusTopStart="8dp"
-                    app:hintEnabled="true">
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/text_secondary"
+                    android:hint="Nhập GPA mới (0.0 - 4.0)"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text_white"
+                    android:textColorHint="@color/text_secondary"
+                    android:textSize="16sp" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtGpaInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Nhập GPA mới (0.0 - 4.0)"
-                        android:inputType="numberDecimal"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Xem trước xếp loại học lực theo thời gian thực -->
+                <!-- Xem trước xếp loại học lực realtime -->
                 <TextView
                     android:id="@+id/tvPreviewRanking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="Dự kiến: Xuất sắc"
-                    android:textColor="#2E7D32"
-                    android:textSize="14sp"
+                    android:textColor="@color/badge_gpa_text"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
-                <!-- Nút cập nhật GPA -->
+                <!-- Nút chính: Cập Nhật Điểm GPA -->
                 <Button
                     android:id="@+id/btnUpdateGpa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Cập nhật GPA" />
+                    android:layout_marginTop="14dp"
+                    android:backgroundTint="@color/btn_update"
+                    android:text="Cập Nhật Điểm GPA"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Nút phụ: Khôi Phục Mặc Định -->
+                <Button
+                    android:id="@+id/btnReset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/btn_reset"
+                    android:text="Khôi Phục Mặc Định"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </ScrollView>
