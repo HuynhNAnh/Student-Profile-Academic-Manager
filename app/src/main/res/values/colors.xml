@@ -8,6 +8,7 @@
     <color name="card_dark">#243342</color>
     <color name="btn_update">#34B469</color>
     <color name="btn_reset">#4E5D6C</color>
+    <color name="btn_cyan">#00BCD4</color>
     <color name="text_white">#FFFFFF</color>
     <color name="text_secondary">#B0BEC5</color>
     <color name="badge_gpa_bg">#1E3A2F</color>
