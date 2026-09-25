@@ -1,46 +1,66 @@
 package com.ute.studentprofile
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.ute.studentprofile.databinding.ActivityMainBinding
 import com.ute.studentprofile.model.Student
+import com.ute.studentprofile.utils.gone
+import com.ute.studentprofile.utils.show
+import com.ute.studentprofile.utils.toAcademicRanking
+import com.ute.studentprofile.utils.toast
+import com.ute.studentprofile.utils.trimmedText
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // BÀI 5: Đối tượng sinh viên hiện tại (Data Class bất biến)
-    private var currentStudent = Student(
-        id = "24155053122202",
+    // Dữ liệu sinh viên mặc định
+    private val defaultStudent = Student(
+        id = "2415053122202",
         name = "Huỳnh Ngọc Anh",
         className = "24T2",
         email = "anhsieu572@gmail.com",
         gpa = 3.75
     )
 
+    // Dữ liệu sinh viên hiện tại (được quản lý bất biến)
+    private var currentStudent = defaultStudent
+
+    companion object {
+        private const val KEY_STUDENT = "KEY_STUDENT"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // BÀI 5: Gán toàn bộ thông tin ban đầu từ model lên giao diện
-        bindStudentData(currentStudent)
+        // 1. Khôi phục trạng thái nếu vừa xoay màn hình (State Retention)
+        savedInstanceState?.getSerializable(KEY_STUDENT)?.let {
+            @Suppress("DEPRECATION")
+            currentStudent = it as Student
+        }
 
-        // Khởi tạo ảnh đại diện mặc định
+        // 2. Hiển thị dữ liệu lên giao diện
+        bindStudentData(currentStudent)
         processAvatarUri(null)
 
-        // Cài đặt các bộ lắng nghe sự kiện
+        // 3. Khởi tạo các sự kiện tương tác
         setupEventListeners()
     }
 
     /**
-     * BÀI 5: Hàm gán toàn bộ thông tin từ model lên các Views giao diện
+     * Bảo toàn dữ liệu sinh viên khi xoay ngang / dọc màn hình
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(KEY_STUDENT, currentStudent)
+    }
+
+    /**
+     * Gán toàn bộ thông tin từ Model lên các Views giao diện
      */
     private fun bindStudentData(student: Student) {
         with(binding) {
@@ -50,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             tvGpaBadge.text = "${student.gpa} GPA  •  ${student.gpa.toAcademicRanking()}"
             edtGpaInput.setText(student.gpa.toString())
 
-            // Kiểm tra Computed Property: Sinh viên tiêu biểu / Vinh danh
+            // Hiển thị huy hiệu vinh danh dựa trên Computed Property
             if (student.isHonorStudent) {
                 tvHonorBadge.show()
             } else {
@@ -60,18 +80,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Cài đặt các sự kiện (Bài 4 & Bài 5)
+     * Thiết lập các sự kiện tương tác người dùng
      */
     private fun setupEventListeners() {
-        // 1. BÀI 4: Lắng nghe sự kiện người dùng gõ phím (Realtime Validation)
+        // Lắng nghe gõ phím thời gian thực (Realtime Validation & Preview)
         binding.edtGpaInput.doOnTextChanged { text, _, _, _ ->
             val input = text?.toString()?.trim().orEmpty()
-
             if (input.isNotEmpty()) {
-                // Tự động xóa thông báo lỗi đỏ cũ khi người dùng bắt đầu sửa
+                // Tự động xóa cảnh báo lỗi cũ
                 binding.edtGpaInput.error = null
 
-                // Xem trước xếp loại học lực tương ứng thời gian thực
+                // Xem trước xếp loại học lực tương ứng
                 val tempScore = input.toDoubleOrNull()
                 if (tempScore != null && tempScore in 0.0..4.0) {
                     binding.tvPreviewRanking.text = "Dự kiến: ${tempScore.toAcademicRanking()}"
@@ -84,85 +103,46 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 2. BÀI 4 & 5: Validate điểm GPA và cập nhật bất biến với copy()
+        // Nút chính: Cập nhật điểm GPA (Validate phòng thủ & Copy bất biến)
         binding.btnUpdateGpa.setOnClickListener {
-            val rawInput = binding.edtGpaInput.trimmedText()
+            val gpa = binding.edtGpaInput.trimmedText().toDoubleOrNull()
 
-            // Bước 1: Chuyển đổi an toàn (phòng thủ crash với toDoubleOrNull)
-            val newGpa = rawInput.toDoubleOrNull()
-
-            // Bước 2: Kiểm tra điều kiện hợp lệ (từ 0.0 đến 4.0)
-            if (newGpa == null || newGpa !in 0.0..4.0) {
-                binding.edtGpaInput.error = "Vui lòng nhập GPA hợp lệ (0.0 - 4.0)"
+            if (gpa == null || gpa !in 0.0..4.0) {
+                binding.edtGpaInput.error = "GPA phải từ 0.0 đến 4.0"
                 binding.edtGpaInput.requestFocus()
                 toast("Điểm số không hợp lệ, vui lòng kiểm tra lại!")
                 return@setOnClickListener
             }
 
-            // Bước 3: Nếu dữ liệu hợp lệ: Xóa thông báo lỗi
             binding.edtGpaInput.error = null
 
-            // BÀI 5: Tính Bất biến (Immutability) - Tạo đối tượng mới bằng copy()
-            currentStudent = currentStudent.copy(gpa = newGpa)
-
-            // Đồng bộ dữ liệu mới lên Views
+            // Cập nhật Model theo nguyên tắc Immutability
+            currentStudent = currentStudent.copy(gpa = gpa)
             bindStudentData(currentStudent)
             binding.tvPreviewRanking.gone()
 
-            toast("Đã cập nhật GPA cho sinh viên: ${currentStudent.name}")
+            toast("Đã cập nhật GPA thành công!")
         }
 
-        // Nút cập nhật hồ sơ chung
-        binding.btnUpdate.setOnClickListener {
-            toast("Hồ sơ đang hoạt động bình thường!")
-        }
-    }
+        // Nút phụ: Khôi phục dữ liệu mặc định (Reset)
+        binding.btnReset.setOnClickListener {
+            currentStudent = defaultStudent
+            bindStudentData(currentStudent)
+            binding.edtGpaInput.error = null
+            binding.tvPreviewRanking.gone()
 
-    // — Gom nhóm thao tác hiển thị với 'with(binding)' (Bài 3) ———
-    private fun displayStudent(name: String, gpa: Double, email: String) {
-        with(binding) {
-            tvStudentName.text = name
-            tvStudentEmail.text = "Email: $email"
-            tvGpaBadge.text = "$gpa GPA  •  ${gpa.toAcademicRanking()}"
-            btnUpdate.isEnabled = true
-            progressBar.visibility = View.GONE
+            toast("Đã khôi phục dữ liệu mặc định!")
         }
     }
 
-    // — Cấu hình Intent với 'apply' (Bài 3) ———
-    private fun openDetailActivity(studentId: String) {
-        val detailIntent = Intent(this, MainActivity::class.java).apply {
-            putExtra("KEY_STUDENT_ID", studentId)
-            putExtra("KEY_TIMESTAMP", System.currentTimeMillis())
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }
-        startActivity(detailIntent)
-    }
-
-    // — Kiểm tra Null Safety với Safe Call ?.let (Bài 3) ———
+    /**
+     * Xử lý ảnh đại diện với Safe Call ?.let
+     */
     private fun processAvatarUri(avatarUri: Uri?) {
         avatarUri?.let { validUri ->
             binding.imgAvatar.setImageURI(validUri)
-            binding.tvAvatarStatus.text = "Đã tải ảnh đại diện!"
-            toast("Ảnh đã được cập nhật")
         } ?: run {
             binding.imgAvatar.setImageResource(R.drawable.ic_default_avatar)
         }
-    }
-
-    // — Chèn hành động phụ (Side-Effects) với 'also' (Bài 3) ———
-    private fun calculateAndAudit(rawScore: Double): Double {
-        return (rawScore * 10.0 / 4.0)
-            .also { finalScore ->
-                Log.d("STUDENT_AUDIT", "Điểm hệ 10 quy đổi: $finalScore")
-            }
-            .also {
-                toast("Đã tính xong điểm: $it")
-            }
-    }
-
-    // Hàm tiện ích hiển thị Toast
-    private fun toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
