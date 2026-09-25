@@ -150,29 +150,31 @@ class MainActivity : AppCompatActivity() {
 
         // TỰ MỞ RỘNG 3: Nút Gửi Email Báo cáo Kết quả (Implicit Intent)
         binding.btnSendReport.setOnClickListener {
-            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:${currentStudent.email}")
-                putExtra(
-                    Intent.EXTRA_SUBJECT,
-                    "[Báo cáo học tập] Sinh viên ${currentStudent.name} - MSSV ${currentStudent.id}"
-                )
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    """
-                    Kính gửi Phòng Đào Tạo và Cố Vấn Học Tập,
+            val subject = "[Báo cáo học tập] Sinh viên ${currentStudent.name} - MSSV ${currentStudent.id}"
+            val body = """
+                Kính gửi Phòng Đào Tạo và Cố Vấn Học Tập,
 
-                    Dưới đây là thông tin báo cáo kết quả học tập của sinh viên:
-                    • Họ và tên: ${currentStudent.name}
-                    • Mã số sinh viên (MSSV): ${currentStudent.id}
-                    • Lớp sinh hoạt: ${currentStudent.className}
-                    • Điểm trung bình tích lũy (GPA): ${currentStudent.gpa} / 4.0
-                    • Xếp loại học lực: ${currentStudent.gpa.toAcademicRanking()}
-                    • Danh hiệu vinh danh: ${if (currentStudent.isHonorStudent) "Sinh viên Vinh danh ⭐" else "Bình thường"}
+                Dưới đây là thông tin báo cáo kết quả học tập của sinh viên:
+                • Họ và tên: ${currentStudent.name}
+                • Mã số sinh viên (MSSV): ${currentStudent.id}
+                • Lớp sinh hoạt: ${currentStudent.className}
+                • Điểm trung bình tích lũy (GPA): ${currentStudent.gpa} / 4.0
+                • Xếp loại học lực: ${currentStudent.gpa.toAcademicRanking()}
+                • Danh hiệu vinh danh: ${if (currentStudent.isHonorStudent) "Sinh viên Vinh danh ⭐" else "Bình thường"}
 
-                    Trân trọng,
-                    ${currentStudent.name}
-                    """.trimIndent()
-                )
+                Trân trọng,
+                ${currentStudent.name}
+            """.trimIndent()
+
+            // Mã hóa URI để Gmail và mọi ứng dụng email đều nhận diện đầy đủ To, Subject và Body
+            val mailtoUri = Uri.parse(
+                "mailto:${currentStudent.email}?subject=${Uri.encode(subject)}&body=${Uri.encode(body)}"
+            )
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO, mailtoUri).apply {
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(currentStudent.email))
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, body)
             }
 
             try {
